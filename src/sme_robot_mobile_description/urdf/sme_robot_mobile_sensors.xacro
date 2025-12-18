@@ -7,13 +7,13 @@
     Arguments:
       - parent: The link to attach sensors to.
   -->
-  <xacro:macro name="add_sensors" params="parent">
+  <xacro:macro name="add_sensors" params="name parent">
 
     <!-- 
       LIDAR SENSOR
       Used for 2D mapping and navigation (AMCL/Gmapping).
     -->
-    <link name="lidar_link">
+    <link name="${name}_lidar_link">
       <visual>
         <geometry>
           <cylinder radius="0.05" length="0.05"/>
@@ -22,17 +22,17 @@
       </visual>
     </link>
 
-    <joint name="lidar_joint" type="fixed">
+    <joint name="${name}_lidar_joint" type="fixed">
       <parent link="${parent}"/>
-      <child link="lidar_link"/>
-      <origin xyz="0.2 0 0.08" rpy="0 0 0"/> <!-- Mounted on front top of chassis -->
+      <child link="${name}_lidar_link"/>
+      <origin xyz="0 0 0.0265" rpy="0 0 0"/> <!-- Mounted on top of plate: 1.5mm (half plate) + 25mm (half lidar height) -->
     </joint>
 
     <!-- 
       CAMERA SENSOR
       Used for visual perception.
     -->
-    <link name="camera_link">
+    <link name="${name}_camera_link">
       <visual>
         <geometry>
           <box size="0.02 0.05 0.02"/>
@@ -41,18 +41,18 @@
       </visual>
     </link>
 
-    <joint name="camera_joint" type="fixed">
+    <joint name="${name}_camera_joint" type="fixed">
       <parent link="${parent}"/>
-      <child link="camera_link"/>
-      <origin xyz="0.25 0 0.05" rpy="0 0 0"/> <!-- Mounted at the very front -->
+      <child link="${name}_camera_link"/>
+      <origin xyz="0.12 0 0.0115" rpy="0 0 0"/> <!-- Mounted on top of plate: 1.5mm (half plate) + 10mm (half camera height) -->
     </joint>
 
     <!-- 
       GAZEBO PLUGIN: LIDAR
       This plugin makes the lidar sensor actually publish laser scan data in Gazebo.
     -->
-    <gazebo reference="lidar_link">
-      <sensor type="ray" name="lidar_sensor">
+    <gazebo reference="${name}_lidar_link">
+      <sensor type="ray" name="${name}_lidar_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
@@ -78,7 +78,7 @@
         </ray>
         <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_laser.so">
           <topicName>scan</topicName>
-          <frameName>lidar_link</frameName>
+          <frameName>${name}_lidar_link</frameName>
         </plugin>
       </sensor>
     </gazebo>

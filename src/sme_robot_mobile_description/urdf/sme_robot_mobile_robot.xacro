@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
-<robot name="robot_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Define robot name prefix - change this to customize all link/joint names -->
+  <xacro:property name="name" value="robot"/>
 
   <!-- Include the sub-components -->
   <xacro:include filename="$(find sme_robot_mobile_description)/urdf/sme_robot_mobile_base.xacro"/>
@@ -12,10 +15,10 @@
   -->
   
   <!-- Create the base with name prefix 'robot' -->
-  <xacro:mobile_base name="robot"/>
+  <xacro:mobile_base name="${name}"/>
 
-  <!-- Attach sensors to the chassis link -->
-  <xacro:add_sensors parent="robot_chassis"/>
+  <!-- Attach sensors to the top plate -->
+  <xacro:add_sensors name="${name}" parent="${name}_top_plate"/>
 
   <!-- 
     GAZEBO PLUGINS
@@ -26,13 +29,13 @@
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
       <updateRate>100.0</updateRate>
       <robotNamespace>/</robotNamespace>
-      <leftFrontJoint>front_left_wheel_joint</leftFrontJoint>
-      <rightFrontJoint>front_right_wheel_joint</rightFrontJoint>
-      <leftRearJoint>rear_left_wheel_joint</leftRearJoint>
-      <rightRearJoint>rear_right_wheel_joint</rightRearJoint>
-      <wheelSeparation>0.35</wheelSeparation>
-      <wheelDiameter>0.2</wheelDiameter>
-      <robotBaseFrame>robot_footprint</robotBaseFrame>
+      <leftFrontJoint>${name}_front_left_wheel_joint</leftFrontJoint>
+      <rightFrontJoint>${name}_front_right_wheel_joint</rightFrontJoint>
+      <leftRearJoint>${name}_rear_left_wheel_joint</leftRearJoint>
+      <rightRearJoint>${name}_rear_right_wheel_joint</rightRearJoint>
+      <wheelSeparation>0.2824</wheelSeparation> <!-- 2 * 0.1412 (y_pos) -->
+      <wheelDiameter>0.08</wheelDiameter> <!-- 80mm -->
+      <robotBaseFrame>${name}_footprint</robotBaseFrame>
       <torque>20</torque>
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
