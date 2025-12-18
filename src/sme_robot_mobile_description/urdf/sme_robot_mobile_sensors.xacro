@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- 
+    MACRO: SENSORS
+    Adds a Lidar and a Camera to the robot.
+    Arguments:
+      - parent: The link to attach sensors to.
+  -->
+  <xacro:macro name="add_sensors" params="parent">
+
+    <!-- 
+      LIDAR SENSOR
+      Used for 2D mapping and navigation (AMCL/Gmapping).
+    -->
+    <link name="lidar_link">
+      <visual>
+        <geometry>
+          <cylinder radius="0.05" length="0.05"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="lidar_link"/>
+      <origin xyz="0.2 0 0.08" rpy="0 0 0"/> <!-- Mounted on front top of chassis -->
+    </joint>
+
+    <!-- 
+      CAMERA SENSOR
+      Used for visual perception.
+    -->
+    <link name="camera_link">
+      <visual>
+        <geometry>
+          <box size="0.02 0.05 0.02"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+    </link>
+
+    <joint name="camera_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="camera_link"/>
+      <origin xyz="0.25 0 0.05" rpy="0 0 0"/> <!-- Mounted at the very front -->
+    </joint>
+
+    <!-- 
+      GAZEBO PLUGIN: LIDAR
+      This plugin makes the lidar sensor actually publish laser scan data in Gazebo.
+    -->
+    <gazebo reference="lidar_link">
+      <sensor type="ray" name="lidar_sensor">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>-3.14159</min_angle>
+              <max_angle>3.14159</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>10.0</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.01</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_laser.so">
+          <topicName>scan</topicName>
+          <frameName>lidar_link</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>
