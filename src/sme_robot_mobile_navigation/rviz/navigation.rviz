@@ -3,7 +3,8 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Map1
       Splitter Ratio: 0.5019304752349854
     Tree Height: 746
   - Class: rviz/Selection
@@ -329,16 +330,34 @@ Visualization Manager:
           Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
           Value: true
-        - Alpha: 0.699999988079071
-          Class: rviz/Map
-          Color Scheme: map
-          Draw Behind: false
-          Enabled: true
-          Name: PotentialMap
-          Topic: /move_base/GlobalPlanner/potential
+        - Alpha: 1
+          Autocompute Intensity Bounds: true
+          Autocompute Value Bounds:
+            Max Value: 10
+            Min Value: -10
+            Value: true
+          Axis: Z
+          Channel Name: intensity
+          Class: rviz/PointCloud2
+          Color: 255; 255; 255
+          Color Transformer: ""
+          Decay Time: 0
+          Enabled: false
+          Invert Rainbow: false
+          Max Color: 255; 255; 255
+          Min Color: 0; 0; 0
+          Name: Potential
+          Position Transformer: ""
+          Queue Size: 10
+          Selectable: true
+          Size (Pixels): 3
+          Size (m): 0.009999999776482582
+          Style: Flat Squares
+          Topic: /move_base/NavfnROS/potential
           Unreliable: false
-          Use Timestamp: false
-          Value: true
+          Use Fixed Frame: true
+          Use rainbow: true
+          Value: false
       Enabled: true
       Name: Global Map
     - Class: rviz/Group
@@ -440,7 +459,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.351321697235107
+      Distance: 5.840399265289307
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -448,9 +467,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.8985902070999146
-        Y: 0.33664289116859436
-        Z: 0.4324891269207001
+        X: 1.9891560077667236
+        Y: 0.6453515887260437
+        Z: 0.7722002267837524
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
