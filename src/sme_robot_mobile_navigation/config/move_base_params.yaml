@@ -13,8 +13,8 @@ oscillation_distance: 0.1       # Distance the robot must move to be considered 
 # PLANNERS
 ######################################################
 # GLOBAL
-# base_global_planner: "navfn/NavfnROS" # Dijkstra algorithm for path planning
-base_global_planner: "global_planner/GlobalPlanner" # A* algorithm for optimal path planning
+base_global_planner: "navfn/NavfnROS" # Dijkstra / A* algorithm for path planning
+#base_global_planner: "global_planner/GlobalPlanner" # A* algorithm for optimal path planning
 
 # LOCAL
 #base_local_planner: "dwa_local_planner/DWAPlannerROS"
