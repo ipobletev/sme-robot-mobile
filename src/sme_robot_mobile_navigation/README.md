@@ -171,19 +171,3 @@ Uses A* algorithm (navfn/NavfnROS) for global path planning with configurable pa
 
 - **sme_robot_mobile_description** - Robot URDF and visualization
 - **sme_robot_mobile_gazebo** - Gazebo-specific configurations (if separate)
-
-## Troubleshooting
-
-### Robot Teleports When Setting Goal
-- Ensure AMCL has properly localized (set initial pose with "2D Pose Estimate")
-- Check that the map matches the Gazebo environment
-- Verify transform tree is complete (`rosrun tf view_frames`)
-
-### TEB Footprint Not Visible
-- Check that `teb_local_planner_params.yaml` has footprint visualization enabled
-- Ensure RViz is displaying the `/move_base/TebLocalPlannerROS/teb_markers` topic
-
-### Navigation Fails / No Path Found
-- Verify costmap inflation parameters aren't too restrictive
-- Check that the goal is in free space on the map
-- Ensure laser scan data is being published (`rostopic echo /scan`)

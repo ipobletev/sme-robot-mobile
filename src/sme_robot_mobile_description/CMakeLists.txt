@@ -3,8 +3,6 @@ project(sme_robot_mobile_description)
 
 # Find the catkin build system and other required ROS packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
   std_msgs
   urdf
   xacro
@@ -19,12 +17,6 @@ catkin_package(
 #  LIBRARIES sme_robot_mobile_description
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
-)
-
-# Define the python script installation (for the behavior tree)
-catkin_install_python(PROGRAMS
-  scripts/simple_behavior_tree.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 # Install directories (launch files, config, urdf, etc.)

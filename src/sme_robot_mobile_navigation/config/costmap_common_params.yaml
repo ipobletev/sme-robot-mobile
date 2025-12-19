@@ -1,8 +1,7 @@
 # ROBOT FOOTPRINT
 # The shape of the robot. Used for collision checking.
-# Expanded to include wheels (x: +/-0.3, y: +/-0.2) + margin
-footprint: [[-0.32, -0.22], [-0.32, 0.22], [0.32, 0.22], [0.32, -0.22]]
-# robot_radius: 0.30 # Use this if the robot is circular
+# Polygon vertices in [x, y] format (counterclockwise)
+footprint: [[-0.15, -0.18], [-0.15, 0.18], [0.15, 0.18], [0.15, -0.18]]
 
 # OBSTACLE LAYER CONFIGURATION
 obstacle_layer:

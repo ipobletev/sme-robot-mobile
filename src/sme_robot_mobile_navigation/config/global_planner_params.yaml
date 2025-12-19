@@ -1,53 +1,21 @@
-# Global Planner Parameters (A* Algorithm)
-# The global_planner package provides A* path planning algorithm
+# Global Planner Parameters
 
 GlobalPlanner:
-  # Use A* algorithm (true) instead of Dijkstra (false)
-  use_dijkstra: false
-  
-  # Use quadratic approximation for distance calculation (more accurate)
-  use_quadratic: true
-  
-  # Use grid path for smoother paths
-  use_grid_path: false
-  
-  # Allow unknown space in the costmap to be considered
-  allow_unknown: true
-  
-  # Default tolerance for goal position (meters)
-  default_tolerance: 0.0
-  
-  # Visualization options
-  visualize_potential: false
-  
-  # Cost factors for path planning
-  # Neutral cost: cells with this cost are considered free space
-  neutral_cost: 50
-  
-  # Cost factor: multiplier for traversal cost
-  cost_factor: 3.0
-  
-  # Lethal cost: cells with cost >= this are considered obstacles
-  lethal_cost: 253
-  
-  # Planning in unknown space
-  # If true, create a path through unknown space if no other path exists
-  old_navfn_behavior: false
-  
-  # Orientation filter
-  # Smooths the orientation along the path
-  orientation_mode: 0  # 0=None, 1=Forward, 2=Interpolate, 3=ForwardSimple, 4=Backward, 5=Leftward, 6=Rightward
-  
-  # Orientation window size for smoothing
-  orientation_window_size: 1
-  
-  # Planner window size (cells)
-  # Limits the planning area around start/goal for efficiency
-  planner_window_x: 0.0  # 0 = use full costmap
-  planner_window_y: 0.0  # 0 = use full costmap
-  
-  # Publish potential map for visualization
-  publish_potential: true
-  
-  # Publish plan for visualization
-  publish_scale: 100
+  use_dijkstra: false           # Use A* algorithm (true) instead of Dijkstra (false)
+  use_quadratic: true           # Use quadratic approximation for distance calculation (more accurate)
+  use_grid_path: false          # Use smoothed path for smoother paths (false). True = Follow the exact grid path
+  allow_unknown: true           # Allow unknown space in the costmap to be considered
+  default_tolerance: 0.1        # Tolerance in meters to reach the goal when the exact goal is not reachable. (0.0 exact point of goal)
+  old_navfn_behavior: false     # Maintain compatibility with old navfn planner versions
+  orientation_mode: 0           # Orientation Algorithm. 0=None, 1=Forward, 2=Interpolate, 3=ForwardSimple, 4=Backward, 5=Leftward, 6=Rightward. 0, The local planner decides the orientation
+  orientation_window_size: 1    # Orientation window size for smoothing
+  planner_window_x: 0.0         # 0 = use full costmap. > 0: Use the specified window size between the robot
+  planner_window_y: 0.0         # 0 = use full costmap. > 0: Use the specified window size between the robot
+  # Costmap parameters
+  neutral_cost: 50              # Neutral cost: cells with this cost are considered free space
+  cost_factor: 3.0              # Cost factor: multiplier for traversal cost
+  lethal_cost: 253              # Lethal cost: cells with cost >= this are considered obstacles
+  # Visualization parameters
+  visualize_potential: false    # Visualization options /move_base/GlobalPlanner/plan (Path)
+  publish_potential: true       # Publish potential map for visualization /move_base/GlobalPlanner/plan (Occupancy Grid)
+  publish_scale: 100            # Publish scale for visualization   

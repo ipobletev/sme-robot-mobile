@@ -1,13 +1,17 @@
-shutdown_costmaps: false
-controller_frequency: 10.0
-planner_patience: 5.0
-controller_patience: 15.0
-conservative_reset_dist: 3.0
-planner_frequency: 5.0
-oscillation_timeout: 10.0
-oscillation_distance: 0.2
+# MOVE BASE PARAMETERS
+######################################################
+shutdown_costmaps: false        # Activate the costmap (false = activate)
+controller_frequency: 10.0      # Velocity of reaction. Frequency of the local planner. 
+planner_patience: 3.0           # Activate recovery if the global planner fails to find a path within this time
+controller_patience: 5.0        # Activate recovery if the local planner fails to find a path within this time
+conservative_reset_dist: 3.0    # Distance to reset the costmap when a goal is reached
+planner_frequency: 5.0          # Frequency of the global planner
+recovery_behavior_enabled: true # Activate recovery behaviors
+oscillation_timeout: 5.0        # Activate recovery if the robot oscillates/stucks for a certain amount of time
+oscillation_distance: 0.1       # Distance the robot must move to be considered not oscillating/stuck
 
 # PLANNERS
+######################################################
 # GLOBAL
 # base_global_planner: "navfn/NavfnROS" # Dijkstra algorithm for path planning
 base_global_planner: "global_planner/GlobalPlanner" # A* algorithm for optimal path planning
@@ -16,22 +20,33 @@ base_global_planner: "global_planner/GlobalPlanner" # A* algorithm for optimal p
 #base_local_planner: "dwa_local_planner/DWAPlannerROS"
 base_local_planner: "teb_local_planner/TebLocalPlannerROS" # Timed Elastic Band
 
-# RECOVERY BEHAVIORS
-recovery_behavior_enabled: true
+# RECOVERY BEHAVIORS PLUGINS
+######################################################
 recovery_behaviors:
+  # Clear costmap recovery
   - name: 'conservative_reset'
     type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  - name: 'rotate_recovery'
-    type: 'rotate_recovery/RotateRecovery'
+
+  # # Rotate recovery
+  # - name: 'rotate_recovery'
+  #   type: 'rotate_recovery/RotateRecovery'
+
+  # Aggressive reset recovery
   - name: 'aggressive_reset'
     type: 'clear_costmap_recovery/ClearCostmapRecovery'
 
-conservative_reset:
-  reset_distance: 3.0
+# RECOVERY BEHAVIORS PARAMETERS
+######################################################
 
-rotate_recovery:
-  frequency: 20.0
-  sim_granularity: 0.017
-  
+# Conservative reset recovery
+conservative_reset:
+  reset_distance: 3.0 # Distance to reset the costmap when a goal is reached
+
+# # Rotate recovery
+# rotate_recovery: # Rotate the robot it self
+#   frequency: 20.0 # Frequency of the rotate recovery
+#   sim_granularity: 0.017 # Granularity of the simulation. Cuantos pasos a dar para rotar el robot (0.017 rad -> 360/1)
+
+# Aggressive reset recovery
 aggressive_reset:
-  reset_distance: 0.0
+  reset_distance: 0.0 # Remove all the costmap at a limit of distance (0.0 remove all costmap)
