@@ -5,13 +5,28 @@ footprint: [[-0.15, -0.18], [-0.15, 0.18], [0.15, 0.18], [0.15, -0.18]]
 
 # OBSTACLE LAYER CONFIGURATION
 obstacle_layer:
-  obstacle_range: 2.5 # Max distance to add obstacles to map
-  raytrace_range: 3.0 # Max distance to clear obstacles from map
+  enabled: true
+  obstacle_range: 3.5  # Max distance to add obstacles to costmap (increased)
+  raytrace_range: 4.0  # Max distance to clear obstacles from costmap
+  max_obstacle_height: 2.0
+  min_obstacle_height: 0.0
   map_type: costmap
+  combination_method: 1  # Maximum
+  track_unknown_space: true
   observation_sources: scan
-  scan: {sensor_frame: lidar_link, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
+  scan: 
+    sensor_frame: robot_lidar_link  # FIXED: was 'lidar_link', should be 'robot_lidar_link'
+    data_type: LaserScan
+    topic: /scan
+    marking: true
+    clearing: true
+    min_obstacle_height: 0.0
+    max_obstacle_height: 2.0
+    obstacle_range: 3.5
+    raytrace_range: 4.0
 
 # INFLATION LAYER CONFIGURATION
 inflation_layer:
-  inflation_radius: 0.35 # Buffer zone around obstacles (reduced from 0.55 to prevent false collisions)
-  cost_scaling_factor: 10.0
+  enabled: true
+  inflation_radius: 0.45  # Increased safety buffer around obstacles
+  cost_scaling_factor: 5.0  # Lower value = softer cost gradient (easier to navigate near obstacles)

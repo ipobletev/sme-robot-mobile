@@ -15,12 +15,12 @@ TebLocalPlannerROS:
   publish_feedback: True                        # Publish planner feedback
           
 # Robot Configuration Parameters      
-  max_vel_x: 0.5                                # Maximum translational velocity of the robot [m/s]
-  max_vel_x_backwards: 0.2                      # Maximum translational velocity of the robot when driving backwards [m/s]
+  max_vel_x: 0.4                                # Maximum translational velocity (reduced for safety)
+  max_vel_x_backwards: 0.15                     # Maximum backwards velocity (reduced)
   max_vel_y: 0.0                                # Maximum holonomic velocity (set to 0.0 for non-holonomic/diff-drive robots) [m/s]
-  max_vel_theta: 1.0                            # Maximum angular velocity of the robot [rad/s]
-  acc_lim_x: 2.5                                # Maximum translational acceleration of the robot [m/s^2]
-  acc_lim_theta: 3.2                            # Maximum angular acceleration of the robot [rad/s^2]
+  max_vel_theta: 0.8                            # Maximum angular velocity (reduced for better control)
+  acc_lim_x: 2.0                                # Maximum translational acceleration (reduced)
+  acc_lim_theta: 2.5                            # Maximum angular acceleration (reduced)
   min_turning_radius: 0.0                       # Minimum turning radius (0.0 for diff-drive robots) [m]
   wheelbase: 0.0                                # Distance between front and rear axle (0.0 for diff-drive robots) [m]
   cmd_angle_instead_rotvel: False               # If true, the planner publishes steering angle instead of angular velocity
@@ -32,12 +32,12 @@ TebLocalPlannerROS:
   complete_global_plan: True                    # If true, the planner uses the complete global plan
           
 # Obstacle Parameters     
-  min_obstacle_dist: 0.25                       # Minimum distance to obstacles
-  inflation_dist: 0.6                           # Inflation distance of obstacles [m]
+  min_obstacle_dist: 0.35                       # Minimum distance to obstacles (INCREASED for safety)
+  inflation_dist: 0.7                           # Inflation distance of obstacles (INCREASED)
   include_costmap_obstacles: True               # If true, the planner includes costmap obstacles
   costmap_obstacles_behind_robot_dist: 1.5      # Distance to look behind the robot for costmap obstacles [m]
-  obstacle_poses_affected: 15                   # Number of poses affected by an obstacle [m]
-  dynamic_obstacle_inflation_dist: 0.6          # Inflation distance of dynamic obstacles [m]
+  obstacle_poses_affected: 20                   # Number of poses affected by an obstacle (INCREASED)
+  dynamic_obstacle_inflation_dist: 0.7          # Inflation distance of dynamic obstacles (INCREASED)
   include_dynamic_obstacles: True               # If true, the planner includes dynamic obstacles
   costmap_converter_plugin: ""                  # Plugin for costmap conversion
   costmap_converter_spin_thread: True           # If true, the costmap converter runs in a separate thread
@@ -59,8 +59,8 @@ TebLocalPlannerROS:
   weight_kinematics_turning_radius: 1           # Weight for the turning radius of the robot
   weight_optimaltime: 1                         # Weight for the optimal time of the trajectory
   weight_shortest_path: 0                       # Weight for the shortest path of the trajectory
-  weight_obstacle: 100                          # Weight for the obstacle cost
-  weight_inflation: 0.2                         # Weight for the inflation cost
+  weight_obstacle: 150                          # Weight for the obstacle cost (INCREASED for better avoidance)
+  weight_inflation: 0.3                         # Weight for the inflation cost (INCREASED)
   weight_dynamic_obstacle: 10                   # Weight for the dynamic obstacle cost
   weight_dynamic_obstacle_inflation: 0.2        # Weight for the dynamic obstacle inflation cost
   weight_viapoint: 1                            # Weight for the via-point cost

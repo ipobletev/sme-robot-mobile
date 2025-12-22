@@ -1,0 +1,101 @@
+<launch>
+
+  <!-- 
+    SLAM + NAVIGATION LAUNCH FILE
+    This launch file combines SLAM (gmapping) with autonomous navigation (move_base).
+    The robot will build a map while navigating autonomously to goals you set.
+    
+    This is useful for:
+    - Exploring unknown environments autonomously
+    - Building maps while navigating
+    - Testing navigation in new environments
+  -->
+
+  <!-- Arguments -->
+  <arg name="open_rviz" default="true"/>
+  <arg name="paused" default="false"/>
+  <arg name="gui" default="true"/>
+  <arg name="move_forward_only" default="false"/>
+
+  <!-- ========================================== -->
+  <!-- 1. GAZEBO SIMULATION -->
+  <!-- ========================================== -->
+  
+  <!-- Start Gazebo with an empty world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description" 
+         command="$(find xacro)/xacro '$(find sme_robot_mobile_description)/urdf/sme_robot_mobile_robot.xacro'"/>
+
+  <!-- Spawn the robot in Gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -model robot -param robot_description"/>
+
+  <!-- Start Robot State Publisher -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- Start Joint State Publisher -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- ========================================== -->
+  <!-- 2. SLAM - GMAPPING -->
+  <!-- ========================================== -->
+
+  <!-- Gmapping SLAM Node - builds the map in real-time -->
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <!-- Load parameters from config file -->
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping_params.yaml" command="load"/>
+    
+    <!-- Topic remapping -->
+    <remap from="scan" to="/scan"/>
+  </node>
+
+  <!-- ========================================== -->
+  <!-- 3. NAVIGATION - MOVE BASE -->
+  <!-- ========================================== -->
+
+  <!-- Move Base for autonomous navigation while building map -->
+  <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen">
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    
+    <!-- Costmap configuration -->
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/local_costmap_params.yaml" command="load" />
+    
+    <!-- Global costmap for SLAM - uses dynamic map from gmapping -->
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_costmap_params_slam.yaml" command="load" />
+    
+    <!-- Planner configuration -->
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/navfn_planner_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/move_base_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/teb_local_planner_params.yaml" command="load" />
+    
+    <!-- Topic remapping -->
+    <remap from="cmd_vel" to="/cmd_vel"/>
+    <remap from="odom" to="/odom"/>
+    <remap from="map" to="/map"/>
+    
+    <!-- Movement constraints -->
+    <param name="TebLocalPlannerROS/max_vel_x_backwards" value="0.0" if="$(arg move_forward_only)" />
+  </node>
+
+  <!-- ========================================== -->
+  <!-- 4. VISUALIZATION -->
+  <!-- ========================================== -->
+
+  <!-- RViz with navigation configuration (shows map being built + navigation) -->
+  <group if="$(arg open_rviz)"> 
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find sme_robot_mobile_navigation)/rviz/navigation.rviz"/>
+  </group>
+
+</launch>

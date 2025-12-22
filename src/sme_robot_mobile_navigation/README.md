@@ -35,6 +35,54 @@ roslaunch sme_robot_mobile_navigation navigation.launch
    - **move_base** - Global and local path planning with TEB planner
 4. **Visualization** - RViz (optional)
 
+#### [slam_gmapping.launch](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/launch/slam_gmapping.launch)
+
+SLAM launch file for autonomous map building using gmapping.
+
+**Usage:**
+```bash
+roslaunch sme_robot_mobile_navigation slam_gmapping.launch
+```
+
+**Arguments:**
+- `open_rviz` - Launch RViz for visualization (default: true)
+- `paused` - Start Gazebo paused (default: false)
+- `gui` - Launch Gazebo GUI (default: true)
+
+**Components Launched:**
+1. **Gazebo Simulation** - Empty world with robot spawned
+2. **Robot Description** - URDF loaded and state publishers
+3. **SLAM Stack:**
+   - **gmapping** - SLAM algorithm for map building
+4. **Visualization** - RViz with SLAM-specific configuration (optional)
+
+#### [slam_navigation.launch](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/launch/slam_navigation.launch)
+
+**SLAM + Navigation combined** - Build maps while navigating autonomously.
+
+**Usage:**
+```bash
+roslaunch sme_robot_mobile_navigation slam_navigation.launch
+```
+
+**Arguments:**
+- `open_rviz` - Launch RViz for visualization (default: true)
+- `paused` - Start Gazebo paused (default: false)
+- `gui` - Launch Gazebo GUI (default: true)
+- `move_forward_only` - Restrict robot to forward motion (default: false)
+
+**Components Launched:**
+1. **Gazebo Simulation** - Empty world with robot spawned
+2. **Robot Description** - URDF loaded and state publishers
+3. **SLAM Stack:**
+   - **gmapping** - SLAM algorithm for real-time map building
+4. **Navigation Stack:**
+   - **move_base** - Autonomous navigation with dynamic map
+5. **Visualization** - RViz with navigation configuration (optional)
+
+> [!NOTE]
+> This mode allows the robot to navigate autonomously while simultaneously building a map. You can send navigation goals via RViz, and the robot will plan paths on the map being built in real-time.
+
 ### Configuration Files (`config/`)
 
 #### Costmap Configuration
@@ -160,6 +208,7 @@ Uses A* algorithm (navfn/NavfnROS) for global path planning with configurable pa
 - `map_server` - Map serving
 - `amcl` - Localization
 - `move_base` - Navigation framework
+- `gmapping` - SLAM for map building
 - `teb_local_planner` - Local trajectory planning
 - `dwa_local_planner` - Alternative local planner
 - `robot_state_publisher` - TF publishing
@@ -170,4 +219,72 @@ Uses A* algorithm (navfn/NavfnROS) for global path planning with configurable pa
 ## Related Packages
 
 - **sme_robot_mobile_description** - Robot URDF and visualization
-- **sme_robot_mobile_gazebo** - Gazebo-specific configurations (if separate)
+
+## SLAM vs Navigation
+
+This package provides both **SLAM for map building** and **navigation with pre-existing maps**.
+
+### When to Use SLAM
+
+Use SLAM (Simultaneous Localization and Mapping) when:
+- You don't have a map of the environment yet
+- You need to update or rebuild an existing map
+- The environment has changed significantly
+
+### When to Use Navigation
+
+Use navigation mode when:
+- You already have a map of the environment
+- You want the robot to autonomously navigate to goals
+- You need path planning and obstacle avoidance
+
+### Workflow: SLAM → Navigation
+
+**Option 1: Manual Exploration (Teleop)**
+
+1. **Build a map using SLAM:**
+   ```bash
+   roslaunch sme_robot_mobile_navigation slam_gmapping.launch
+   ```
+
+2. **Drive the robot around to explore** (in new terminal):
+   ```bash
+   rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+   ```
+
+3. **Save the map:**
+   ```bash
+   rosrun map_server map_saver -f ~/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/maps/my_new_map
+   ```
+
+4. **Use the map for navigation:**
+   ```bash
+   roslaunch sme_robot_mobile_navigation navigation.launch map_file:=$(rospack find sme_robot_mobile_navigation)/maps/my_new_map.yaml
+   ```
+
+**Option 2: Autonomous Exploration (SLAM + Navigation)**
+
+1. **Build map while navigating autonomously:**
+   ```bash
+   roslaunch sme_robot_mobile_navigation slam_navigation.launch
+   ```
+
+2. **Send navigation goals via RViz** - Robot will navigate and build map simultaneously
+
+3. **Save the map when done exploring:**
+   ```bash
+   rosrun map_server map_saver -f ~/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/maps/my_new_map
+   ```
+
+4. **Use the saved map for navigation:**
+   ```bash
+   roslaunch sme_robot_mobile_navigation navigation.launch map_file:=$(rospack find sme_robot_mobile_navigation)/maps/my_new_map.yaml
+   ```
+
+### SLAM Configuration
+
+The gmapping SLAM algorithm is configured in [gmapping_params.yaml](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/config/gmapping_params.yaml) with parameters optimized for:
+- Differential drive robot kinematics
+- 360-degree lidar sensor (10m range, 360 samples)
+- Map resolution: 0.05m (5cm per cell)
+- Particle filter: 30 particles

@@ -1,0 +1,15 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: robot_footprint
+  update_frequency: 5.0
+  publish_frequency: 0.5
+  static_map: false  # Dynamic map from gmapping, not static map_server
+  rolling_window: true  # Costmap follows the robot
+  width: 100.0  # Larger window
+  height: 100.0
+  resolution: 0.05
+  transform_tolerance: 1.0  # More tolerance for SLAM
+  
+  plugins:
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}

@@ -1,0 +1,47 @@
+# Gmapping SLAM Configuration for SME Robot Mobile
+# Optimized for differential drive robot with 360-degree lidar
+
+# Map Parameters
+map_update_interval: 2.0        # How often to update and publish the map (seconds)
+maxUrange: 9.5                  # Maximum usable range of laser (slightly less than max 10m)
+maxRange: 10.0                  # Maximum range of laser sensor
+sigma: 0.05                     # Sigma used by the greedy endpoint matching
+kernelSize: 1                   # Kernel for scan matching
+lstep: 0.05                     # Linear step for scan matcher
+astep: 0.05                     # Angular step for scan matcher
+iterations: 5                   # Number of iterations for scan matching
+lsigma: 0.075                   # Sigma for scan matching position
+ogain: 3.0                      # Gain for smoothing the likelihood
+lskip: 0                        # Number of beams to skip in each scan
+
+# Range Parameters  
+srr: 0.1                        # Odometry error in translation as a function of translation (rho/rho)
+srt: 0.2                        # Odometry error in translation as a function of rotation (rho/theta)
+str: 0.1                        # Odometry error in rotation as a function of translation (theta/rho)
+stt: 0.2                        # Odometry error in rotation as a function of rotation (theta/theta)
+
+# Particle Filter Parameters
+particles: 30                   # Number of particles in the filter
+xmin: -50.0                     # Initial map size (meters)
+ymin: -50.0
+xmax: 50.0
+ymax: 50.0
+delta: 0.05                     # Map resolution (meters per cell)
+llsamplerange: 0.01             # Translational sampling range for likelihood
+llsamplestep: 0.01              # Translational sampling step for likelihood
+lasamplerange: 0.005            # Angular sampling range for likelihood
+lasamplestep: 0.005             # Angular sampling step for likelihood
+
+# Motion Model
+linearUpdate: 0.2               # Process a scan if robot has moved this far (meters)
+angularUpdate: 0.2              # Process a scan if robot has turned this much (radians)
+temporalUpdate: -1.0            # Process a scan if this much time has elapsed (-1.0 to disable)
+resampleThreshold: 0.5          # Neff threshold for resampling
+
+# Frame IDs
+odom_frame: odom
+base_frame: robot_footprint
+map_frame: map
+
+# Other Parameters
+transform_publish_period: 0.05  # How often to publish the transform (20 Hz)
