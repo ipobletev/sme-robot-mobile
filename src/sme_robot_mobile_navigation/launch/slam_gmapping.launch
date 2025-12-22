@@ -48,7 +48,7 @@
   <!-- Gmapping SLAM Node -->
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
     <!-- Load parameters from config file -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping_params.yaml" command="load"/>
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping/gmapping_params.yaml" command="load"/>
     
     <!-- Topic remapping -->
     <remap from="scan" to="/scan"/>

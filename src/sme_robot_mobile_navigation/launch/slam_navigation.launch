@@ -51,7 +51,7 @@
   <!-- Gmapping SLAM Node - builds the map in real-time -->
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
     <!-- Load parameters from config file -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping_params.yaml" command="load"/>
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping/gmapping_params.yaml" command="load"/>
     
     <!-- Topic remapping -->
     <remap from="scan" to="/scan"/>
@@ -66,18 +66,18 @@
     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
     
     <!-- Costmap configuration -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/common/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/common/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/local_planner/costmap/local_costmap_params.yaml" command="load" />
     
     <!-- Global costmap for SLAM - uses dynamic map from gmapping -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_costmap_params_slam.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner/costmap/global_costmap_params_slam.yaml" command="load" />
     
     <!-- Planner configuration -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner_params.yaml" command="load" />
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/navfn_planner_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner/planners/global_planner_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner/planners/navfn_planner_params.yaml" command="load" />
     <rosparam file="$(find sme_robot_mobile_navigation)/config/move_base_params.yaml" command="load" />
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/teb_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/local_planner/planners/teb_local_planner_params.yaml" command="load" />
     
     <!-- Topic remapping -->
     <remap from="cmd_vel" to="/cmd_vel"/>
