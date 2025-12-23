@@ -6,24 +6,29 @@ footprint: [[-0.15, -0.18], [-0.15, 0.18], [0.15, 0.18], [0.15, -0.18]]
 # OBSTACLE LAYER CONFIGURATION
 obstacle_layer:
   enabled: true
-  obstacle_range: 3.5  # Max distance to add obstacles to costmap (increased)
-  raytrace_range: 4.0  # Max distance to clear obstacles from costmap
+  obstacle_range: 3.5  # Max distance to add obstacles to costmap
+  raytrace_range: 5.0  # Increased to clear obstacles more aggressively
   max_obstacle_height: 2.0
-  min_obstacle_height: 0.0
+  min_obstacle_height: 0.05  # INCREASED to filter ground reflections and prevent self-detection
   map_type: costmap
-  combination_method: 1  # Maximum
-  track_unknown_space: true
+  combination_method: 0  # Overwrite - CRITICAL: allows LIDAR to clear static map obstacles
+  track_unknown_space: false  # Don't track unknown space, focus on clearing known obstacles
   observation_sources: scan
   scan: 
-    sensor_frame: robot_lidar_link  # FIXED: was 'lidar_link', should be 'robot_lidar_link'
+    sensor_frame: robot_lidar_link
     data_type: LaserScan
     topic: /scan
     marking: true
-    clearing: true
+    clearing: true  # Critical: enables clearing of old obstacles
     min_obstacle_height: 0.0
     max_obstacle_height: 2.0
     obstacle_range: 3.5
-    raytrace_range: 4.0
+    raytrace_range: 5.0  # Increased to match obstacle_layer setting
+
+# STATIC LAYER CONFIGURATION
+static_layer:
+  enabled: true
+  track_unknown_space: false  # Don't permanently mark cells, allow obstacle layer to clear them
 
 # INFLATION LAYER CONFIGURATION
 inflation_layer:

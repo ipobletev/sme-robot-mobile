@@ -1,14 +1,19 @@
 <launch>
 
   <!-- 
-    SLAM + NAVIGATION LAUNCH FILE
-    This launch file combines SLAM (gmapping) with autonomous navigation (move_base).
-    The robot will build a map while navigating autonomously to goals you set.
+    SLAM TOOLBOX + NAVIGATION LAUNCH FILE
+    This launch file uses SLAM Toolbox (instead of GMapping) with autonomous navigation.
+    
+    SLAM Toolbox advantages over GMapping:
+    - Handles dynamic environments (people, moving objects)
+    - Lifelong mapping - map updates when objects are removed
+    - Better loop closure for large environments
+    - Map serialization (save/load maps)
     
     This is useful for:
-    - Exploring unknown environments autonomously
-    - Building maps while navigating
-    - Testing navigation in new environments
+    - Environments with people or moving objects
+    - Long-running mapping sessions
+    - Situations where the environment changes over time
   -->
 
   <!-- Arguments -->
@@ -46,13 +51,13 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
 
   <!-- ========================================== -->
-  <!-- 2. SLAM - GMAPPING -->
+  <!-- 2. SLAM - SLAM TOOLBOX -->
   <!-- ========================================== -->
 
-  <!-- Gmapping SLAM Node - builds the map in real-time -->
-  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+  <!-- SLAM Toolbox Node - builds the map in real-time with dynamic support -->
+  <node pkg="slam_toolbox" type="async_slam_toolbox_node" name="slam_toolbox" output="screen">
     <!-- Load parameters from config file -->
-    <rosparam file="$(find sme_robot_mobile_navigation)/config/gmapping/gmapping_params.yaml" command="load"/>
+    <rosparam file="$(find sme_robot_mobile_navigation)/config/slam_toolbox/slam_toolbox_params.yaml" command="load"/>
     
     <!-- Topic remapping -->
     <remap from="scan" to="/scan"/>
@@ -71,7 +76,7 @@
     <rosparam file="$(find sme_robot_mobile_navigation)/config/common/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find sme_robot_mobile_navigation)/config/local_planner/costmap/local_costmap_params.yaml" command="load" />
     
-    <!-- Global costmap for SLAM - uses dynamic map from gmapping -->
+    <!-- Global costmap for SLAM - uses dynamic map from SLAM Toolbox -->
     <rosparam file="$(find sme_robot_mobile_navigation)/config/global_planner/costmap/global_costmap_params_slam.yaml" command="load" />
     
     <!-- Planner configuration -->

@@ -27,7 +27,7 @@
   <gazebo>
     <!-- Skid Steer Drive Controller (for 4 wheels) -->
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-      <updateRate>100.0</updateRate>
+      <updateRate>200.0</updateRate> <!-- INCREASED for more stable physics simulation -->
       <robotNamespace>/</robotNamespace>
       <leftFrontJoint>${name}_front_left_wheel_joint</leftFrontJoint>
       <rightFrontJoint>${name}_front_right_wheel_joint</rightFrontJoint>
