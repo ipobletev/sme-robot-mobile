@@ -4,12 +4,13 @@ global_costmap:
   update_frequency: 5.0
   publish_frequency: 0.5
   static_map: false  # Dynamic map from gmapping, not static map_server
-  rolling_window: true  # Costmap follows the robot
-  width: 100.0  # Larger window
-  height: 100.0
+  rolling_window: false  # Use full map instead of rolling window
+  width: 200.0  # Map size (will grow as needed)
+  height: 200.0
   resolution: 0.05
   transform_tolerance: 1.0  # More tolerance for SLAM
   
   plugins:
-    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+    - {name: static_layer,    type: "costmap_2d::StaticLayer"}    # Uses /map from gmapping
+    - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}  # LIDAR for dynamic obstacles
     - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
