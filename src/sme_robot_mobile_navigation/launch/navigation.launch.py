@@ -20,7 +20,7 @@ def generate_launch_description():
         
         DeclareLaunchArgument(
             'map',
-            default_value=os.path.join(pkg_share, 'maps', 'my_map.yaml'), # Replace with your default map if any
+            default_value=os.path.join(pkg_share, 'maps', 'map.yaml'), # Replace with your default map if any
             description='Full path to map yaml file to load'
         ),
 
