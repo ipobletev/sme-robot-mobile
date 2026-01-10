@@ -1,6 +1,6 @@
 # Robot Project
 
-This project contains a ROS 2 workspace for a mobile robot. It includes packages for simulation, and navigation.
+This project contains a ROS 2 Humble workspace for a mobile robot. It includes packages for simulation, and navigation.
 
 ## Launch Commands
 

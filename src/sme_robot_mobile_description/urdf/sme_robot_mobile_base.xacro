@@ -24,22 +24,37 @@
 
     <!-- 
       CHASSIS LINK (Virtual - for collision and inertia)
-      The main body of the robot - invisible, used for physics.
+      The main body of the robot.
     -->
     <link name="${name}_chassis">
-      <collision>
+      <visual>
         <geometry>
           <box size="0.26 0.245 0.12"/>
         </geometry>
         <material name="black">
-          <color rgba="0.1 0.1 0.1 0.1"/>
+          <color rgba="0.1 0.1 0.1 1"/>
         </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.26 0.245 0.12"/>
+        </geometry>
       </collision>
       <inertial>
         <mass value="15.0"/> <!-- Heavy base for stability -->
         <inertia ixx="0.1" ixy="0" ixz="0" iyy="0.1" iyz="0" izz="0.1"/>
       </inertial>
     </link>
+
+    <gazebo reference="${name}_chassis">
+      <visual>
+        <material>
+          <ambient>0.2 0.2 0.2 1</ambient>
+          <diffuse>0.2 0.2 0.2 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+        </material>
+      </visual>
+    </gazebo>
 
     <!-- 
       BOTTOM PLATE
@@ -55,6 +70,16 @@
         </material>
       </visual>
     </link>
+
+    <gazebo reference="${name}_base_link">
+      <visual>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </gazebo>
 
     <joint name="${name}_base_link_joint" type="fixed">
       <parent link="${name}_chassis"/>
@@ -76,6 +101,16 @@
         </material>
       </visual>
     </link>
+
+    <gazebo reference="${name}_top_plate">
+      <visual>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </gazebo>
 
     <joint name="${name}_top_plate_joint" type="fixed">
       <parent link="${name}_base_link"/>
@@ -107,6 +142,16 @@
           <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
         </inertial>
       </link>
+
+      <gazebo reference="${name}_${prefix}_wheel">
+        <visual>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.1 0.1 0.1 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </gazebo>
 
       <joint name="${name}_${prefix}_wheel_joint" type="continuous">
         <parent link="${name}_chassis"/>

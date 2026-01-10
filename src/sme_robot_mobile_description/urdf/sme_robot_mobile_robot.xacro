@@ -25,22 +25,25 @@
     These are required for the robot to actually move in simulation.
   -->
   <gazebo>
-    <!-- Skid Steer Drive Controller (for 4 wheels) -->
-    <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
-      <updateRate>200.0</updateRate> <!-- INCREASED for more stable physics simulation -->
-      <robotNamespace>/</robotNamespace>
-      <leftFrontJoint>${name}_front_left_wheel_joint</leftFrontJoint>
-      <rightFrontJoint>${name}_front_right_wheel_joint</rightFrontJoint>
-      <leftRearJoint>${name}_rear_left_wheel_joint</leftRearJoint>
-      <rightRearJoint>${name}_rear_right_wheel_joint</rightRearJoint>
-      <wheelSeparation>0.2824</wheelSeparation> <!-- 2 * 0.1412 (y_pos) -->
-      <wheelDiameter>0.08</wheelDiameter> <!-- 80mm -->
-      <robotBaseFrame>${name}_footprint</robotBaseFrame>
-      <torque>20</torque>
-      <commandTopic>cmd_vel</commandTopic>
-      <odometryTopic>odom</odometryTopic>
-      <odometryFrame>odom</odometryFrame>
-      <broadcastTF>true</broadcastTF>
+    <!-- Diff Drive (Skid Steer) -->
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>${name}_front_left_wheel_joint</left_joint>
+      <left_joint>${name}_rear_left_wheel_joint</left_joint>
+      <right_joint>${name}_front_right_wheel_joint</right_joint>
+      <right_joint>${name}_rear_right_wheel_joint</right_joint>
+      <wheel_separation>0.2824</wheel_separation>
+      <wheel_radius>0.04</wheel_radius>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <topic>cmd_vel</topic>
+      <odom_topic>odom</odom_topic>
+      <tf_topic>tf</tf_topic>
+      <frame_id>odom</frame_id>
+      <child_frame_id>${name}_footprint</child_frame_id>
+    </plugin>
+
+    <!-- Joint State Publisher -->
+    <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
+      <topic>joint_states</topic>
     </plugin>
   </gazebo>
 

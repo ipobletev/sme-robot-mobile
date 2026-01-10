@@ -28,6 +28,16 @@
       <origin xyz="0 0 0.0265" rpy="0 0 0"/> <!-- Mounted on top of plate: 1.5mm (half plate) + 25mm (half lidar height) -->
     </joint>
 
+    <gazebo reference="${name}_lidar_link">
+      <visual>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </gazebo>
+
     <!-- 
       CAMERA SENSOR
       Used for visual perception.
@@ -41,6 +51,16 @@
       </visual>
     </link>
 
+    <gazebo reference="${name}_camera_link">
+      <visual>
+        <material>
+          <ambient>0.1 0.1 0.1 1</ambient>
+          <diffuse>0.1 0.1 0.1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </gazebo>
+
     <joint name="${name}_camera_joint" type="fixed">
       <parent link="${parent}"/>
       <child link="${name}_camera_link"/>
@@ -52,11 +72,12 @@
       This plugin makes the lidar sensor actually publish laser scan data in Gazebo.
     -->
     <gazebo reference="${name}_lidar_link">
-      <sensor type="ray" name="${name}_lidar_sensor">
+      <sensor type="gpu_lidar" name="${name}_lidar_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
-        <ray>
+        <topic>scan</topic>
+        <lidar>
           <scan>
             <horizontal>
               <samples>360</samples>
@@ -75,11 +96,7 @@
             <mean>0.0</mean>
             <stddev>0.01</stddev>
           </noise>
-        </ray>
-        <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_laser.so">
-          <topicName>scan</topicName>
-          <frameName>${name}_lidar_link</frameName>
-        </plugin>
+        </lidar>
       </sensor>
     </gazebo>
 
@@ -103,6 +120,16 @@
       </inertial>
     </link>
 
+    <gazebo reference="${name}_imu_link">
+      <visual>
+        <material>
+          <ambient>0.0 0.0 1.0 1</ambient>
+          <diffuse>0.0 0.0 1.0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </gazebo>
+
     <joint name="${name}_imu_joint" type="fixed">
       <parent link="${parent}"/>
       <child link="${name}_imu_link"/>
@@ -119,17 +146,7 @@
         <always_on>true</always_on>
         <update_rate>100</update_rate>
         <visualize>true</visualize>
-        <topic>__default_topic__</topic>
-        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-          <topicName>imu</topicName>
-          <bodyName>${name}_imu_link</bodyName>
-          <updateRateHZ>50.0</updateRateHZ>
-          <gaussianNoise>0.0</gaussianNoise>
-          <xyzOffset>0 0 0</xyzOffset>
-          <rpyOffset>0 0 0</rpyOffset>
-          <frameName>${name}_imu_link</frameName>
-          <initialOrientationAsReference>false</initialOrientationAsReference>
-        </plugin>
+        <topic>imu</topic>
         <pose>0 0 0 0 0 0</pose>
       </sensor>
     </gazebo>

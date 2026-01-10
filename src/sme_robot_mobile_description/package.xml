@@ -14,7 +14,10 @@
 
   <depend>urdf</depend>
   <depend>xacro</depend>
-  <depend>gazebo_ros_pkgs</depend>
+  <depend>ros_gz_sim</depend>
+  <depend>ros_gz_bridge</depend>
+  <depend>ros_gz_image</depend>
+  <depend>ros_gz_interfaces</depend>
   <depend>robot_state_publisher</depend>
   <depend>joint_state_publisher</depend>
   <depend>joint_state_publisher_gui</depend>
