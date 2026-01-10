@@ -1,25 +1,16 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8)
 project(sme_robot_mobile_description)
 
-# Find the catkin build system and other required ROS packages
-find_package(catkin REQUIRED COMPONENTS
-  std_msgs
-  urdf
-  xacro
-  gazebo_ros
-  nav_msgs
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+find_package(urdf REQUIRED)
+find_package(xacro REQUIRED)
+
+install(DIRECTORY launch urdf rviz
+  DESTINATION share/${PROJECT_NAME}
 )
 
-
-# Define the catkin package parameters
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES sme_robot_mobile_description
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
-)
-
-# Install directories (launch files, config, urdf, etc.)
-install(DIRECTORY launch config urdf meshes
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+ament_package()

@@ -1,25 +1,14 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.8)
 project(sme_robot_mobile_navigation)
 
-find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  std_msgs
-  nav_msgs
-  geometry_msgs
-  move_base
-  amcl
-  map_server
-  dwa_local_planner
-)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES sme_robot_mobile_navigation
-#  CATKIN_DEPENDS roscpp rospy std_msgs nav_msgs move_base
-#  DEPENDS system_lib
-)
+find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY launch config maps
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
 )
+
+ament_package()
