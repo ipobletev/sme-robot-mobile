@@ -72,11 +72,11 @@
       This plugin makes the lidar sensor actually publish laser scan data in Gazebo.
     -->
     <gazebo reference="${name}_lidar_link">
-      <sensor type="gpu_lidar" name="${name}_lidar_sensor">
+      <sensor type="lidar" name="${name}_lidar_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
         <update_rate>10</update_rate>
-        <topic>scan</topic>
+        <topic>/scan</topic>
         <lidar>
           <scan>
             <horizontal>

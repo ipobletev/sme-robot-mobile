@@ -11,7 +11,7 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
-### Mobile Robot Package
+### Mobile Robot Description Package
 
 *   `ros2 launch sme_robot_mobile_description display.launch.py`: Visualizes the robot model in Rviz. Useful for checking the URDF model.
 *   `ros2 launch sme_robot_mobile_description gazebo.launch.py`: Starts the full simulation environment in Gazebo. It spawns the robot, starts state publishers, and launches a behavior tree node.
