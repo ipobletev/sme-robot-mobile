@@ -6,6 +6,8 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+from launch.actions import SetEnvironmentVariable
+
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('sme_robot_mobile_description')
@@ -15,12 +17,21 @@ def generate_launch_description():
     xacro_file = os.path.join(pkg_share, 'urdf', 'sme_robot_mobile_robot.xacro')
     robot_description = Command(['xacro ', xacro_file])
     
+    # Declaring arguments for rendering
+    render_engine = DeclareLaunchArgument(
+        'render_engine',
+        default_value='ogre',
+        description='Render engine for Gazebo (ogre or ogre2)'
+    )
+
     # Gazebo Sim (Ignition) launch
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(pkg_ros_gz_sim, 'launch', 'gz_sim.launch.py')
         ),
-        launch_arguments={'gz_args': '-r empty.sdf --render-engine ogre'}.items(),
+        launch_arguments={'gz_args': [
+            '-r empty.sdf --render-engine ', LaunchConfiguration('render_engine')
+        ]}.items(),
     )
 
     # Spawn the robot
@@ -65,6 +76,9 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        SetEnvironmentVariable('LIBGL_ALWAYS_SOFTWARE', '1'),
+        SetEnvironmentVariable('QT_X11_NO_MITSHM', '1'),
+        render_engine,
         gazebo,
         robot_state_publisher,
         spawn,
