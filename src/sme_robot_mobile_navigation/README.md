@@ -1,118 +1,65 @@
 # SME Robot Mobile Navigation
 
-Paquete de navegación autónoma para el robot móvil SME. Incluye SLAM, localización (AMCL) y planificación de trayectorias (Move Base).
+Paquete de navegación autónoma para el robot móvil SME basado en **ROS 2 Humble**. Utiliza el stack de **Navigation 2 (Nav2)** para localización, planificación y ejecución de comportamientos.
 
 ## Launch Files
 
-### 1. `navigation.launch`
-**Navegación con mapa pre-construido**
+### 1. `navigation.launch.py`
+**Navegación completa con mapa y simulación**
 
-Inicia el stack completo de navegación usando un mapa previamente guardado.
+Inicia el entorno de simulación en Gazebo, el stack de Nav2 y RViz en un solo comando.
 
 ```bash
-roslaunch sme_robot_mobile_navigation navigation.launch
+ros2 launch sme_robot_mobile_navigation navigation.launch.py
 ```
 
 **Componentes:**
-- Gazebo (simulación)
-- Map Server (carga mapa estático)
-- AMCL (localización)
-- Move Base (planificación global y local con TEB)
-- RViz (visualización)
+- **Gazebo Sim**: Simulación física del robot y entorno.
+- **Nav2 Bringup**: Stack completo de navegación.
+  - **AMCL**: Localización probabilística basada en partículas.
+  - **Planner Server**: Planificación de rutas globales.
+  - **Controller Server**: Seguimiento de trayectorias locales (DWB).
+  - **Behavior Server**: Comportamientos de recuperación (giros, retroceso).
+  - **Map Server**: Carga el mapa estático.
+- **RViz2**: Visualización preconfigurada para navegación.
 
 **Argumentos:**
-- `map_file`: Ruta al archivo `.yaml` del mapa (default: `maps/map.yaml`)
-- `open_rviz`: Abrir RViz automáticamente (default: `true`)
-- `move_forward_only`: Restringir movimiento solo hacia adelante (default: `false`)
+- `path_to_map`: Ruta al archivo `.yaml` del mapa (default: `map/map.yaml`).
+- `nav2_params_file`: Ruta al archivo de parámetros de Nav2 (default: `config/nav2_params.yaml`).
+- `use_rviz`: Abrir RViz2 automáticamente (default: `true`).
 
 ---
 
-### 2. `slam_gmapping.launch`
-**SLAM para construcción de mapas**
+### 2. SLAM (Construcción de Mapas)
+**Uso de SLAM Toolbox**
 
-Usa GMapping para crear mapas de forma autónoma. Solo mapeo, sin navegación.
-
-```bash
-roslaunch sme_robot_mobile_navigation slam_gmapping.launch
-```
-
-**Componentes:**
-- Gazebo (simulación)
-- GMapping (SLAM)
-- RViz (visualización)
-
-**Uso:** Teleopera el robot para explorar y construir el mapa. Guarda el mapa con:
-```bash
-rosrun map_server map_saver -f nombre_mapa
-```
-
----
-
-### 3. `slam_navigation.launch`
-**SLAM + Navegación simultánea (GMapping)**
-
-Combina GMapping con Move Base para navegar mientras construye el mapa.
+Para construir un mapa nuevo, se recomienda usar `slam_toolbox`. Puedes ejecutarlo junto con la descripción del robot:
 
 ```bash
-roslaunch sme_robot_mobile_navigation slam_navigation.launch
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true
 ```
 
-**Componentes:**
-- Gazebo (simulación con mundo `test_room.world`)
-- GMapping (SLAM)
-- Move Base (navegación autónoma)
-- RViz (visualización)
-
-**Uso:** Envía goals en RViz. El robot navegará y construirá el mapa simultáneamente.
-
----
-
-### 4. `slam_toolbox_navigation.launch` ⭐ **Recomendado**
-**SLAM + Navegación con SLAM Toolbox**
-
-Usa SLAM Toolbox (superior a GMapping) para mapeo dinámico y navegación.
-
+**Guardar el mapa:**
+Una vez explorado el entorno, guarda el mapa usando el plugin de SLAM Toolbox en RViz o vía terminal:
 ```bash
-roslaunch sme_robot_mobile_navigation slam_toolbox_navigation.launch
+ros2 run nav2_map_server map_saver_cli -f src/sme_robot_mobile_navigation/map/map
 ```
-
-**Componentes:**
-- Gazebo (simulación con mundo `test_room.world`)
-- SLAM Toolbox (SLAM con soporte dinámico)
-- Move Base (navegación autónoma)
-- RViz (visualización)
-
-**Ventajas sobre GMapping:**
-- ✅ Maneja entornos dinámicos (personas, objetos móviles)
-- ✅ Actualización de mapa cuando se remueven obstáculos
-- ✅ Mejor cierre de bucles en entornos grandes
-- ✅ Mapeo de por vida (lifelong mapping)
-- ✅ Serialización de mapas (guardar/cargar)
-
-**Uso:** Envía goals en RViz. El mapa se actualiza dinámicamente cuando cambia el entorno.
 
 ---
 
 ## Configuración
 
-Los parámetros de navegación se encuentran en `config/`:
+Los parámetros de navegación se centralizan en un único archivo YAML compatible con ROS 2:
 
-- **Costmaps:** `common/costmap_common_params.yaml`, `local_costmap_params.yaml`, `global_costmap_params.yaml`
-- **Planificadores:**
-  - Global: `global_planner_params.yaml`, `navfn_planner_params.yaml`
-  - Local: `teb_local_planner_params.yaml`
-- **SLAM:**
-  - GMapping: `gmapping/gmapping_params.yaml`
-  - SLAM Toolbox: `slam_toolbox/slam_toolbox_params.yaml`
-- **Move Base:** `move_base_params.yaml`
+- **Nav2 Params:** [nav2_params.yaml](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_navigation/config/nav2_params.yaml)
+  - Configuración de AMCL, Costmaps (Global/Local), Planners y Controllers.
 
 ## Dependencias
 
-- `gazebo_ros`
-- `move_base`
-- `amcl`
-- `map_server`
-- `gmapping`
+- `nav2_bringup`
+- `nav2_amcl`
+- `nav2_map_server`
+- `nav2_lifecycle_manager`
 - `slam_toolbox`
-- `teb_local_planner`
+- `ros_gz_sim` (Gazebo)
 - `sme_robot_mobile_description`

@@ -14,8 +14,8 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     
     # Process the URDF file
-    xacro_file = os.path.join(pkg_share, 'urdf', 'sme_robot_mobile_robot.xacro')
-    robot_description = Command(['xacro ', xacro_file])
+    urdf_file = os.path.join(pkg_share, 'urdf', 'turtlebot3', 'turtlebot3_waffle.urdf')
+    robot_description = Command(['xacro ', urdf_file])
     
     # Declaring arguments for rendering
     render_engine = DeclareLaunchArgument(
@@ -71,13 +71,20 @@ def generate_launch_description():
             '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',
             '/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model',
         ],
-        parameters=[{'use_sim_time': False}],
+        parameters=[{'use_sim_time': True}],
         output='screen'
     )
 
+    pkg_share_path = os.path.join(pkg_share, '..')
+
     return LaunchDescription([
         SetEnvironmentVariable('LIBGL_ALWAYS_SOFTWARE', '1'),
+        SetEnvironmentVariable('MESA_GL_VERSION_OVERRIDE', '3.3'),
+        SetEnvironmentVariable('IGN_GAZEBO_RENDER_ENGINE_GUESS', 'ogre'),
+        SetEnvironmentVariable('GZ_RENDERING_ENGINE_GUESS', 'ogre'),
         SetEnvironmentVariable('QT_X11_NO_MITSHM', '1'),
+        SetEnvironmentVariable('GZ_SIM_RESOURCE_PATH', pkg_share_path),
+        SetEnvironmentVariable('IGN_GAZEBO_RESOURCE_PATH', pkg_share_path),
         render_engine,
         gazebo,
         robot_state_publisher,

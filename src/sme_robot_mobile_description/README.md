@@ -1,10 +1,10 @@
 # sme_robot_mobile_description
 
-This package contains the URDF description, visualization configurations, and launch files for the SME mobile robot.
+This package contains the URDF description, visualization configurations, and launch files for the SME mobile robot, updated for ROS 2.
 
 ## Overview
 
-The `sme_robot_mobile_description` package defines a 4-wheeled differential drive mobile robot with integrated sensors (lidar and camera). It provides tools for visualizing the robot in RViz and simulating it in Gazebo with full navigation capabilities.
+The `sme_robot_mobile_description` package defines a 4-wheeled differential drive mobile robot with integrated sensors (lidar and camera). It provides tools for visualizing the robot in RViz 2 and simulating it in Gazebo with full navigation capabilities using Nav2.
 
 ## Package Contents
 
@@ -22,13 +22,13 @@ The `sme_robot_mobile_description` package defines a 4-wheeled differential driv
 
 ### Launch Files (`launch/`)
 
-#### [display.launch](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/launch/display.launch)
+#### [display.launch.py](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/launch/display.launch.py)
 
-Visualize the robot model in RViz without simulation.
+Visualize the robot model in RViz 2 without simulation.
 
 **Usage:**
 ```bash
-roslaunch sme_robot_mobile_description display.launch
+ros2 launch sme_robot_mobile_description display.launch.py
 ```
 
 **Arguments:**
@@ -38,32 +38,32 @@ roslaunch sme_robot_mobile_description display.launch
 
 **Features:**
 - Loads robot description from xacro
-- Launches joint state publisher (with GUI option)
-- Starts robot state publisher for TF transforms
-- Opens RViz with custom configuration
+- Launches `joint_state_publisher` (with GUI option)
+- Starts `robot_state_publisher` for TF transforms
+- Opens RViz 2 with custom configuration
 
 ---
 
-#### [gazebo.launch](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/launch/gazebo.launch)
+#### [gazebo.launch.py](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/launch/gazebo.launch.py)
 
 Launch the robot in Gazebo simulation with full physics and sensor simulation.
 
 **Usage:**
 ```bash
-roslaunch sme_robot_mobile_description gazebo.launch
+ros2 launch sme_robot_mobile_description gazebo.launch.py
 ```
 
 **Features:**
 - Starts Gazebo with empty world
-- Spawns robot from URDF with skid-steer drive controller
+- Spawns robot from URDF with differential drive controller
 - Publishes odometry on `/odom` topic
 - Accepts velocity commands on `/cmd_vel` topic
 - Publishes laser scan data on `/scan` topic
-- Launches robot state publisher for TF transforms
-- Launches joint state publisher
+- Launches `robot_state_publisher` for TF transforms
+- Launches `joint_state_publisher`
 
 **Gazebo Plugins:**
-- **Skid Steer Drive Controller** - Controls 4-wheel differential drive
+- **Differential Drive Controller** - Controls 4-wheel differential drive
   - Update rate: 100 Hz
   - Wheel torque: 20 Nm
   - Broadcasts TF from `odom` to `robot_footprint`
@@ -74,7 +74,7 @@ roslaunch sme_robot_mobile_description gazebo.launch
 
 ### Configuration (`config/`)
 
-- **[nav_params.yaml](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/config/nav_params.yaml)** - Navigation parameters for costmaps
+- **[nav2_params.yaml](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/config/nav2_params.yaml)** - Navigation parameters for Nav2
   - Robot radius: 0.3m
   - Inflation radius: 0.55m
   - Obstacle range: 2.5m
@@ -82,7 +82,7 @@ roslaunch sme_robot_mobile_description gazebo.launch
 
 ### Scripts (`scripts/`)
 
-- **[simple_behavior_tree.py](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/scripts/simple_behavior_tree.py)** - Behavior tree implementation for robot control
+- **[simple_behavior_tree.py](file:///home/isma/Desktop/sme-robot-mobile/src/sme_robot_mobile_description/scripts/simple_behavior_tree.py)** - Behavior tree implementation for robot control (requires ROS 2 compatible libraries)
 
 ## Robot Specifications
 
@@ -107,74 +107,64 @@ roslaunch sme_robot_mobile_description gazebo.launch
 
 ## Usage Examples
 
-### Visualize Robot in RViz
+### Visualize Robot in RViz 2
 
 ```bash
 # With joint state publisher GUI
-roslaunch sme_robot_mobile_description display.launch
+ros2 launch sme_robot_mobile_description display.launch.py
 
 # Without GUI
-roslaunch sme_robot_mobile_description display.launch gui:=false
+ros2 launch sme_robot_mobile_description display.launch.py gui:=false
 ```
 
 ### Simulate Robot in Gazebo
 
 ```bash
 # Launch Gazebo simulation
-roslaunch sme_robot_mobile_description gazebo.launch
+ros2 launch sme_robot_mobile_description gazebo.launch.py
 ```
 
 ### Control Robot in Simulation
 
 ```bash
 # Send velocity commands to move the robot
-rostopic pub /cmd_vel geometry_msgs/Twist "linear:
-  x: 0.5
-  y: 0.0
-  z: 0.0
-angular:
-  x: 0.0
-  y: 0.0
-  z: 0.2"
+ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.2}}"
 ```
 
 ### Monitor Sensor Data
 
 ```bash
 # View laser scan data
-rostopic echo /scan
+ros2 topic echo /scan
 
 # View odometry
-rostopic echo /odom
+ros2 topic echo /odom
 ```
 
-### Load Robot Description Programmatically
+### Load Robot Description Programmatically (Python)
 
 ```python
-import rospy
+import rclpy
+from rclpy.node import Node
 
-# Robot description is loaded to parameter server
-robot_description = rospy.get_param('/robot_description')
+# In ROS 2, robot_description is usually a topic or a parameter of robot_state_publisher
+# You can get it from the /robot_description topic
 ```
 
-## Dependencies
+## Dependencies (ROS 2)
 
 - `urdf`
 - `xacro`
 - `robot_state_publisher`
 - `joint_state_publisher`
 - `joint_state_publisher_gui`
-- `rviz`
-- `gazebo_ros`
-- `move_base`
-- `amcl`
-- `nav_msgs`
-- `moveit_core`
-- `moveit_ros_planning_interface`
-- `py_trees`
-- `py_trees_ros`
+- `rviz2`
+- `gazebo_ros_pkgs`
+- `nav2_common`
+- `nav2_bringup`
+- `rclpy`
 
 ## Related Packages
 
-- **sme_robot_mobile_navigation** - Navigation stack configuration with AMCL and move_base
-- **sme_robot_mobile_simulation** - Comprehensive simulation scenarios (if available)
+- **sme_robot_mobile_navigation** - Navigation stack configuration with Nav2
+- **sme_robot_mobile_simulation** - Comprehensive simulation scenarios

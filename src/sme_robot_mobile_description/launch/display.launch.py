@@ -8,8 +8,8 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
     pkg_share = get_package_share_directory('sme_robot_mobile_description')
-    default_model_path = os.path.join(pkg_share, 'urdf', 'sme_robot_mobile_robot.xacro')
-    rviz_config_file = os.path.join(pkg_share, 'rviz', 'urdf.rviz')
+    default_model_path = os.path.join(pkg_share, 'urdf', 'turtlebot3','turtlebot3_waffle.urdf')
+    rviz_config_file = os.path.join(pkg_share, 'rviz', 'model.rviz')
 
     return LaunchDescription([
         DeclareLaunchArgument(

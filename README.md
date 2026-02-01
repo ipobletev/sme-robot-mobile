@@ -7,7 +7,7 @@ This project contains a ROS 2 Humble workspace for a mobile robot. It includes p
 Before running any commands, ensure you have sourced the workspace:
 
 ```bash
-colcon build --symlink-install
+colcon build
 source install/setup.bash
 ```
 
