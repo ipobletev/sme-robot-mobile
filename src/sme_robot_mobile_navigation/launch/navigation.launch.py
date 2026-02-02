@@ -14,7 +14,6 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     # Packages
     pkg_mob_nav = get_package_share_directory('sme_robot_mobile_navigation')
-    # pkg_description = get_package_share_directory('sme_robot_mobile_description')
     # Files
     nav2_params_file_path = os.path.join(pkg_mob_nav, 'param', 'nav2_params.yaml')
     rviz_config_path = os.path.join(pkg_mob_nav, 'rviz', 'navigation.rviz')
