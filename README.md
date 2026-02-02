@@ -18,6 +18,4 @@ source install/setup.bash
 
 ### Mobile Robot Navigation Package
 
-*   `ros2 launch sme_robot_mobile_navigation navigation.launch.py`: Launches the complete navigation stack. This includes the Map Server, AMCL for localization, Move Base for path planning and control, and Rviz for visualization.
-
-*   `ros2 launch sme_robot_mobile_navigation slam.launch.py`: Launches the complete SLAM stack. This includes the Map Server, AMCL for localization, Move Base for path planning and control, and Rviz for visualization.
+*   `ros2 launch sme_robot_mobile_navigation navigation.launch.py`: Launches the complete navigation stack. This includes the Map Server, AMCL for localization, Move Base for path planning and control, and Rviz for visualization. With simulation first launch gazebo: `ros2 launch sme_robot_mobile_description gazebo.launch.py`

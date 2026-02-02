@@ -37,10 +37,10 @@ amcl:
     z_max: 0.05
     z_rand: 0.5
     z_short: 0.05
-    scan_topic: scan
+    scan_topic: /scan
     set_initial_pose: True
     initial_pose:
-      x: 0.0
+      x: 1.8
       y: 0.0
       z: 0.0
       yaw: 0.0
@@ -341,10 +341,6 @@ recoveries_server:
     min_rotational_vel: 0.4
     rotational_acc_lim: 3.2
 
-# robot_state_publisher:
-#   ros__parameters:
-#     use_sim_time: True
-
 waypoint_follower:
   ros__parameters:
     loop_rate: 200
@@ -359,5 +355,5 @@ lifecycle_manager_navigation:
   ros__parameters:
     use_sim_time: True
     autostart: True
-    node_names: ['map_server', 'amcl', 'planner_server', 'controller_server', 'bt_navigator', 'waypoint_follower', 'recoveries_server']
+    node_names: ['planner_server', 'controller_server', 'bt_navigator', 'waypoint_follower', 'recoveries_server']
     bond_timeout: 4.0
