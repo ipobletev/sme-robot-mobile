@@ -13,9 +13,12 @@ source install/setup.bash
 
 ### Mobile Robot Description Package
 
-*   `ros2 launch sme_robot_mobile_description display.launch.py`: Visualizes the robot model in Rviz. Useful for checking the URDF model.
-*   `ros2 launch sme_robot_mobile_description gazebo.launch.py`: Starts the full simulation environment in Gazebo. It spawns the robot, starts state publishers, and launches a behavior tree node.
+*   **1.1** - `ros2 launch sme_robot_mobile_description rviz.launch.py`: Visualizes the robot model in RViz. Useful for checking the URDF model and joint states.
+*   **1.2** - `ros2 launch sme_robot_mobile_description gazebo.launch.py`: Starts the full simulation environment in Gazebo. It spawns the robot and starts sensors.
 
 ### Mobile Robot Navigation Package
 
-*   `ros2 launch sme_robot_mobile_navigation navigation.launch.py`: Launches the complete navigation stack. This includes the Map Server, AMCL for localization, Move Base for path planning and control, and Rviz for visualization. With simulation first launch gazebo: `ros2 launch sme_robot_mobile_description gazebo.launch.py`
+*   **2.1** - `ros2 launch sme_robot_mobile_navigation navigation.launch.py`: Launches the navigation stack (Map Server, AMCL, Nav2 controllers/planners).
+    *   *For simulation:* Use Gazebo (**1.2**) command first, then run with `use_sim_time:=true`.
+*   **2.2** - `ros2 launch sme_robot_mobile_navigation rviz.launch.py`: Launches RViz pre-configured for navigation visualization.
+    *   *For simulation:* Run with `use_sim_time:=true`.

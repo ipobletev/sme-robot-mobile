@@ -5,19 +5,51 @@ Autonomous navigation package for the SME mobile robot based on **ROS 2 Humble**
 ## Launch Files
 
 ### 1. `navigation.launch.py`
-**Full navigation with map and RViz**
+Starts the Nav2 stack (map server, AMCL, controller, planner, etc.).
 
-This file starts the Nav2 stack and the RViz interface. For correct operation in a simulated environment, follow these steps:
+**Arguments:**
+- `use_sim_time`: Set to `true` when running in Gazebo (default: `false`).
+- `map`: Path to the map YAML file.
+- `params_file`: Path to Nav2 parameters file.
+
+### 2. `rviz.launch.py`
+Standalone RViz interface with the navigation configuration.
+
+**Arguments:**
+- `use_sim_time`: Set to `true` when running in Gazebo (default: `false`).
+
+## Usage Instructions
+
+### A. Running in Simulation (Gazebo)
 
 1. **Start the Gazebo simulation:**
    ```bash
    ros2 launch sme_robot_mobile_description gazebo.launch.py
    ```
 
+2. **Start the navigation stack:**
+   ```bash
    ros2 launch sme_robot_mobile_navigation navigation.launch.py use_sim_time:=true
    ```
 
-3. **Start the navigation stack with other map:**
+3. **Start RViz (Optional):**
    ```bash
-   ros2 launch sme_robot_mobile_navigation navigation.launch.py use_sim_time:=true map:=sme-robot-mobile/src/sme_robot_mobile_navigation/map/test_map.yaml
-   
+   ros2 launch sme_robot_mobile_navigation rviz.launch.py use_sim_time:=true
+   ```
+
+### B. Running on the Real Robot
+
+1. **Start the navigation stack:**
+   ```bash
+   ros2 launch sme_robot_mobile_navigation navigation.launch.py
+   ```
+
+2. **Start RViz (on your workstation):**
+   ```bash
+   ros2 launch sme_robot_mobile_navigation rviz.launch.py
+   ```
+
+### C. Using a Custom Map
+```bash
+ros2 launch sme_robot_mobile_navigation navigation.launch.py map:=/path/to/your/map.yaml
+```

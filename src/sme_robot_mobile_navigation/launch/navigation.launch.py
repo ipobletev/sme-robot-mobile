@@ -42,7 +42,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='true',
+            default_value='false',
             description='Use simulation (Gazebo) clock if true'
         ),
 
@@ -53,22 +53,8 @@ def generate_launch_description():
             description='Full path to the ROS2 parameters file to use for all launched nodes'
         ),
 
-        # RViz parameters
-        DeclareLaunchArgument(
-            'use_rviz',
-            default_value='true',
-            description='Whether to start RViz'
-        ),
-
         # Node Execution
         ########################################################################
-
-        # # Gazebo launch (includes robot_state_publisher, spawn, and bridge)
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource(
-        #         os.path.join(pkg_description, 'launch', 'gazebo.launch.py')
-        #     )
-        # ),
         
         # Navigation Nav2 node execution
         IncludeLaunchDescription(
@@ -77,16 +63,5 @@ def generate_launch_description():
                 'map': map_dir,
                 'use_sim_time': use_sim_time,
                 'params_file': nav2_params_dir}.items()
-        ),
-        
-        # RViz node execution
-        Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            arguments=['-d', rviz_config_path],
-            condition=IfCondition(LaunchConfiguration('use_rviz')),
-            parameters=[{'use_sim_time': True}],
-            output='screen'
         ),
     ])
