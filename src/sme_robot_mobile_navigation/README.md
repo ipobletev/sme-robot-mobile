@@ -19,5 +19,5 @@ This file starts the Nav2 stack and the RViz interface. For correct operation in
 
 3. **Start the navigation stack with other map:**
    ```bash
-   ros2 launch sme_robot_mobile_navigation navigation.launch.py use_sim_time:=true map:=sme-robot-mobile/src/sme_robot_mobile_navigation/map/empty_map.yaml
+   ros2 launch sme_robot_mobile_navigation navigation.launch.py use_sim_time:=true map:=sme-robot-mobile/src/sme_robot_mobile_navigation/map/test_map.yaml
    
