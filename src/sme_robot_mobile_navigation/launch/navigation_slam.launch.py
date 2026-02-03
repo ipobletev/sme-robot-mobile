@@ -15,8 +15,7 @@ def generate_launch_description():
     # Packages
     pkg_mob_nav = get_package_share_directory('sme_robot_mobile_navigation')
     # Files
-    nav2_params_file_path = os.path.join(pkg_mob_nav, 'param', 'nav2_params.yaml')
-    rviz_config_path = os.path.join(pkg_mob_nav, 'rviz', 'navigation.rviz')
+    nav2_params_file_path = os.path.join(pkg_mob_nav, 'param', 'nav2_params_slam.yaml')
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
     map_dir = LaunchConfiguration(
@@ -57,9 +56,8 @@ def generate_launch_description():
         
         # Navigation Nav2 node execution
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/bringup_launch.py']),
+            PythonLaunchDescriptionSource([nav2_launch_file_dir, '/navigation_launch.py']),
             launch_arguments={
-                'map': map_dir,
                 'use_sim_time': use_sim_time,
                 'params_file': nav2_params_dir}.items()
         ),
