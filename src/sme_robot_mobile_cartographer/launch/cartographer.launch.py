@@ -14,17 +14,16 @@ from launch_ros.actions import Node
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
     use_rviz = LaunchConfiguration('use_rviz', default='true')
-    turtlebot3_cartographer_prefix = get_package_share_directory('turtlebot3_cartographer')
-    cartographer_config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(
-                                                  turtlebot3_cartographer_prefix, 'config'))
-    configuration_basename = LaunchConfiguration('configuration_basename',
-                                                 default='turtlebot3_lds_2d.lua')
+    package_name = 'sme_robot_mobile_cartographer'
+    pkg_share = get_package_share_directory(package_name)
+    
+    cartographer_config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(pkg_share, 'config'))
+    configuration_basename = LaunchConfiguration('configuration_basename', default='cartographer.lua')
 
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
-    rviz_config_dir = os.path.join(get_package_share_directory('turtlebot3_cartographer'),
-                                   'rviz', 'tb3_cartographer.rviz')
+    rviz_config_dir = os.path.join(pkg_share, 'rviz', 'cartographer.rviz')
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -47,7 +46,11 @@ def generate_launch_description():
             output='screen',
             parameters=[{'use_sim_time': use_sim_time}],
             arguments=['-configuration_directory', cartographer_config_dir,
-                       '-configuration_basename', configuration_basename]),
+                       '-configuration_basename', configuration_basename],
+            remappings=[
+                ('scan', 'scan'),
+                ('imu', 'imu'),
+            ]),
 
         DeclareLaunchArgument(
             'resolution',

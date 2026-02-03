@@ -34,18 +34,18 @@ Use this with a pre-saved map (static map) and AMCL.
 #### 4.2 Navigation visualize in RViz
 *   `ros2 launch sme_robot_mobile_navigation nav_rviz.launch.py`
 
-### 5. Test commands
+### 5. Stack Navigation
 #### 5.1 Navigation static map
     ros2 launch sme_robot_mobile_description gazebo.launch.py
 
-    ros2 launch sme_robot_mobile_navigation navigation_static.launch.py map:=test_map.yaml use_sim_time:=true
+    ros2 launch sme_robot_mobile_navigation navigation_static.launch.py use_sim_time:=true
     
-    ros2 launch sme_robot_mobile_navigation nav_rviz.launch.py use_sim_time:=true`
+    ros2 launch sme_robot_mobile_navigation nav_rviz.launch.py use_sim_time:=true
 
 #### 5.2 Navigation SLAM
     ros2 launch sme_robot_mobile_description gazebo.launch.py
     
-    ros2 launch sme_robot_mobile_cartographer cartographer.launch.py  use_sim_time:=true
+    ros2 launch sme_robot_mobile_cartographer cartographer.launch.py use_sim_time:=true
     
     ros2 launch sme_robot_mobile_navigation navigation_slam.launch.py use_sim_time:=true
     

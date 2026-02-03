@@ -25,6 +25,10 @@
       name="gz::sim::systems::Sensors">
       <render_engine>ogre2</render_engine>
     </plugin>
+
+    <plugin filename="libignition-gazebo-imu-system.so"
+      name="ignition::gazebo::systems::Imu">
+    </plugin>
   </gazebo>
 
   <gazebo reference="base_scan">
@@ -59,5 +63,17 @@
         <visualize>true</visualize>
     </sensor>
   </gazebo>
+
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <gz_frame_id>imu_link</gz_frame_id>
+      <frame_id>imu_link</frame_id>
+      <always_on>1</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>/imu</topic>
+    </sensor>
+  </gazebo>
+
 
 </robot>
